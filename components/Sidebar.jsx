@@ -3,27 +3,49 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth";
 import {
   Users,
   CalendarCheck,
   ClipboardList,
   Home,
   UserCircle,
+  Clock4,
   LogOut,
 } from "lucide-react";
 
-export default function Sidebar({ menu, pathname }) {
+export default function Sidebar({ pathname }) {
   const [isOpen, setIsOpen] = useState(true);
   const router = useRouter();
+  const { user, logout } = useAuth();
 
-  // Example icons map
   const icons = {
     Dashboard: <Home size={18} />,
     Employees: <Users size={18} />,
     Attendance: <CalendarCheck size={18} />,
     Timekeeping: <ClipboardList size={18} />,
     Leaves: <CalendarCheck size={18} />,
+    DTR: <Clock4 size={18} />,
   };
+
+  // Menus for each role
+  const adminMenu = [
+    { name: "Dashboard", href: "/dashboard/admin" },
+    { name: "Employees", href: "/dashboard/admin/employees" },
+    { name: "Attendance", href: "/dashboard/admin/attendance" },
+    { name: "Timekeeping", href: "/dashboard/admin/timekeeping" },
+    { name: "Leaves", href: "/dashboard/admin/leaves" },
+    { name: "DTR", href: "/dashboard/admin/DTR" },
+  ];
+
+  const userMenu = [
+    { name: "Dashboard", href: "/dashboard/user/" },
+    { name: "Attendance", href: "/dashboard/user/attendance" },
+    { name: "Leaves", href: "/dashboard/user/leaves" },
+    { name: "DTR", href: "/dashboard/user/DTR" },
+  ];
+
+  const menu = user?.role === "admin" ? adminMenu : userMenu;
 
   return (
     <div
@@ -39,7 +61,6 @@ export default function Sidebar({ menu, pathname }) {
         {isOpen && <span className="font-bold text-gray-800">My Company</span>}
       </div>
 
-      {/* Navigation */}
       <nav className="flex-1 px-2 space-y-1 mt-2">
         {menu.map((item) => {
           const active = pathname === item.href;
@@ -60,25 +81,27 @@ export default function Sidebar({ menu, pathname }) {
         })}
       </nav>
 
-      {/* <div className="p-4 border-t border-gray-200 flex items-center justify-between">
-       
-        <div className="flex items-center gap-2">
-          <UserCircle size={22} className="text-gray-600" />
+      {user && (
+        <div className="p-4 border-t border-gray-200 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <UserCircle size={22} className="text-gray-600" />
+            {isOpen && (
+              <span className="text-sm font-medium text-gray-700 capitalize">
+                {user.role}
+              </span>
+            )}
+          </div>
+
           {isOpen && (
-            <span className="text-sm font-medium text-gray-700">Admin</span>
+            <button
+              onClick={() => router.push("/login")}
+              className="text-gray-500 hover:text-red-600"
+            >
+              <LogOut size={20} />
+            </button>
           )}
         </div>
-
-       
-        {isOpen && (
-          <button
-            onClick={() => router.push("/login")}
-            className="text-gray-500 hover:text-red-600"
-          >
-            <LogOut size={20} />
-          </button>
-        )}
-      </div> */}
+      )}
     </div>
   );
 }

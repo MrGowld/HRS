@@ -11,8 +11,8 @@ export default function LeaveManagement() {
 
   return (
     <RoleGuard role="admin">
-      <div className="p-6 space-y-6">
-        <h1 className="text-2xl font-bold">Leave Management</h1>
+      <div className="mt-8">
+        <h1 className="text-xl font-semibold mb-4">Leave Management</h1>
         <Card>
           <CardHeader>
             <CardTitle>Pending Requests</CardTitle>

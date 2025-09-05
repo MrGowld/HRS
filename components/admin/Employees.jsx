@@ -12,7 +12,7 @@ export default function EmployeeDirectory() {
 
   return (
     <RoleGuard role="admin">
-      <div className="p-6 space-y-6">
+      <div className="mt-8">
         <h2 className="text-xl font-semibold mb-4">Employee Directory</h2>
         <Card>
           <CardHeader>
